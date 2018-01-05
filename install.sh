@@ -14,6 +14,7 @@ if [ "$?" -eq "0" ]; then
     fi
 
     cp zshrc ~/.zshrc
+    cp louis.zsh-theme ~/.oh-my-zsh/themes/
 else
     echo "ZSH is not installed, skipping oh-my-zsh installation"
 fi
@@ -22,8 +23,9 @@ fi
 echo Downloading colorschemes
 git clone https://github.com/flazz/vim-colorschemes.git vim
 echo Downloading Plug
-curl -fLo vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vimrc
+curl -fLo vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
+mkdir ~/.vim
 cp -R vim/*  ~/.vim
 
 if [ -f ~/.vimrc ]; then
