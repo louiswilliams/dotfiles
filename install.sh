@@ -4,7 +4,7 @@ if [[ `whoami` = "root" ]]; then
 fi
 
 # oh-my-zsh
-`zsh --version`
+zsh --version
 if [ "$?" -eq "0" ]; then
     echo "Installing oh-my-zsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
@@ -37,5 +37,12 @@ cp vimrc ~/.vimrc
 
 echo Installing Plug plugins
 vim +PluginInstall +qall
+
+if [ -f ~/.tmux.conf ]; then
+  echo .tmux.conf exists, moving to .tmux.conf.old
+  mv ~/.tmux.conf ~/.tmux.conf.old 
+fi
+
+cp tmux.conf ~/.tmux.conf
 
 echo Done
