@@ -49,10 +49,8 @@ Plug 'https://github.com/oblitum/YouCompleteMe',
 Plug 'wincent/command-t', {
 \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
 \ }
-" Plug 'https://github.com/lyuts/vim-rtags'
-
-" Plug 'lifepillar/vim-mucomplete'
-
+Plug 'rhysd/vim-clang-format'
+Plug 'tpope/vim-fugitive'
 Plug 'https://github.com/szw/vim-tags.git'
 call plug#end()
 
@@ -68,23 +66,14 @@ let g:CommandTAcceptSelectionCommand='edit'
 let g:CommandTAcceptSelectionSplitCommand='sp'
 let g:CommandTAcceptSelectionVSplitCommand='vs'
 
-" Make CTRLP not slow
-let g:ctrlp_cache_dir = $HOME . '/.cache/ctrlp'
-let g:ctrlp_match_window = 'min:4:max:10,results:20'
-let g:ctrlp_custom_ignore = {
-    \ 'dir': '\v[\/]\.git$',
-    \ 'file': '\v\.(o|pyc)',
-    \ }
-set wildignore+=*/.git/*,*.o,*.pyc
 if executable('ag')
     set grepprg=ag\ --nogroup\ --nocolor
-    let g:ctrlp_user_command = 'ag %s -l --nocolor --ignore .git -g ""'
-
-"    let g:ctrlp_use_caching = 0
-
 endif
 
 let g:vim_tags_ignore_files = ['.gitignore']
+
+let g:clang_format#detect_style_file = 1
+let g:clang_format#auto_format = 1
 
 " Lint and clangformat commands
 " command EsLint execute "!eslint % --fix"
