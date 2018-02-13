@@ -61,6 +61,7 @@ set completeopt+=noselect
 let g:mucomplete#enable_auto_at_startup = 1
 
 let g:go_fmt_command = "goimports"
+let g:go_version_warning = 0
 
 let g:CommandTAcceptSelectionCommand='edit'
 let g:CommandTAcceptSelectionSplitCommand='sp'
@@ -73,10 +74,30 @@ endif
 let g:vim_tags_ignore_files = ['.gitignore']
 
 let g:clang_format#detect_style_file = 1
+let g:clang_format#auto_format_on_insert_leave = 1
 let g:clang_format#auto_format = 1
 
 " Lint and clangformat commands
 " command EsLint execute "!eslint % --fix"
+command! -nargs=1 Silent
+  \   execute 'silent !' . <q-args>
+  \ | execute 'redraw!'
+
+function! RunLint()
+  if filereadable("buildscripts/lint.py")
+      call setqflist([])
+      let lintout=system('python2 buildscripts/lint.py ' . shellescape(expand('%')))
+      if v:shell_error
+          caddexpr lintout
+          cope
+      else
+          cclose
+      endif
+  endif
+endfunction
+
+autocmd BufWritePost *.cpp call RunLint()
+autocmd BufWritePost *.h call RunLint()
 
 " Helpers for buffer cycling
 nnoremap gp :bp<CR>
