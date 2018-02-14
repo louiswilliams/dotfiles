@@ -79,9 +79,6 @@ let g:clang_format#auto_format = 1
 
 " Lint and clangformat commands
 " command EsLint execute "!eslint % --fix"
-command! -nargs=1 Silent
-  \   execute 'silent !' . <q-args>
-  \ | execute 'redraw!'
 
 function! RunLint()
   if filereadable("buildscripts/lint.py")
