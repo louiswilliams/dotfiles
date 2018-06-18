@@ -11,6 +11,10 @@ set expandtab
 set smarttab
 set shiftwidth=4
 set tabstop=4
+set softtabstop=4 "treat 4 spaces like a tab
+set textwidth=100 "code should stop at 100 chars 
+match ErrorMsg '\%>100v.\+'
+set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly
 
 " Allow backspace
 set backspace=indent,eol,start
@@ -29,6 +33,9 @@ set ignorecase
 " Don't highlight after exiting search
 noh
 
+" Enable mouse support
+set mouse=a
+
 " Disable error bels
 set noerrorbells
 
@@ -45,19 +52,20 @@ call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'fatih/vim-go'
 Plug 'https://github.com/oblitum/YouCompleteMe',
-            \ {'do': 'python3 ./install.py --clang-completer --gocode-completer'}
+            \ {'do': 'python3 ./install.py --clang-completer'}
 Plug 'wincent/command-t', {
 \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
 \ }
 Plug 'rhysd/vim-clang-format'
 Plug 'tpope/vim-fugitive'
+Plug 'terryma/vim-multiple-cursors'
 Plug 'https://github.com/szw/vim-tags.git'
 call plug#end()
 
-" command FixIt 'YcmCompleter FixIt'
-" set completeopt-=preview
-set completeopt+=menuone
-set completeopt+=noselect
+command FixIt 'YcmCompleter FixIt'
+set completeopt-=preview
+" set completeopt+=menuone
+" set completeopt+=noselect
 let g:mucomplete#enable_auto_at_startup = 1
 
 let g:go_fmt_command = "goimports"
@@ -80,6 +88,10 @@ let g:clang_format#auto_format = 1
 " Lint and clangformat commands
 " command EsLint execute "!eslint % --fix"
 
+function! GitRepoName()
+    return system('basename -s .git `git config --get remote.origin.url`')
+endfunction
+
 function! RunLint()
   if filereadable("buildscripts/lint.py")
       call setqflist([])
@@ -93,8 +105,26 @@ function! RunLint()
   endif
 endfunction
 
+autocmd BufNew,BufRead *.log match none
 autocmd BufWritePost *.cpp call RunLint()
 autocmd BufWritePost *.h call RunLint()
+
+set wildignore+=build
+set wildignore+=html
+
+"show current function in "tabline" using tagbar function
+" try
+"     call tagbar#currenttag('%s','','fs') " make sure this works
+"     set tabline=%{tagbar#currenttag('%s','','fs')}
+"     set showtabline=2 " show tabline even if only one tab
+"     autocmd vimrc CursorHold * let &ro = &ro "no-op that causes tabline to update
+"     if exists('&guioptions')
+"         " Don't use the gui tabline
+"         set guioptions-=e
+"     endif
+" catch
+"     "ignore failure
+" endtry
 
 " Helpers for buffer cycling
 nnoremap gp :bp<CR>
@@ -135,9 +165,7 @@ nmap <leader>v <C-W>v
 nmap <leader>[ <C-W>w
 " Prev window
 nmap <leader>] <C-W>p
-nmap <leader>w :w<CR>
-nmap <leader>wq :wq<CR>
-nmap <leader>q :q!<CR>
+nmap <leader>w :bd<CR>
 
 " Tab cycles windows
 map <Tab> <C-W>w

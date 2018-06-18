@@ -1,34 +1,27 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
-export ZSH=/Users/louiswilliams/.oh-my-zsh
-export PATH=$PATH:/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/
-export PATH=$PATH:~/.bin/
-export GOPATH=/Users/louiswilliams/.go
-export GOBIN=$GOPATH/bin
-export PATH=$PATH:$GOBIN
+export ZSH=~/.oh-my-zsh
+export PATH=~/.bin/:$PATH
 
 export NINJA_STATUS='[%f/%t (%p) %es] '
 
 alias resmoke='python2 buildscripts/resmoke.py'
 alias vimrc='vim ~/.vimrc'
-alias cr='python ~/Documents/git/kernel-tools/codereview/upload.py -s mongodbcr.appspot.com --jira_user=louis.williams'
+alias cr='python ~/git/kernel-tools/codereview/upload.py --no_oauth2_webbrowser -s mongodbcr.appspot.com \
+          --cc codereview-mongo@10gen.com,serverteam-storage@10gen.com --jira_user=louis.williams'
 alias merge-base="git merge-base HEAD master"
 
-MONGO_PATH=/Users/louiswilliams/Documents/git/mongo
-alias build-ninja="python $MONGO_PATH/buildscripts/scons.py --dbg CC=clang CXX=clang++ \
+alias icemon='icemon -s 10.4.1.60'
+
+alias icecream-ninja="python buildscripts/scons.py --dbg --ssl \
     CCFLAGS='-Wa,--compress-debug-sections' \
     MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
-    VARIANT_DIR=dbg --modules=ninja \
+    --variables-files=etc/scons/mongodbtoolchain_gcc.vars \
+    VARIANT_DIR=ent --modules=ninja,enterprise \
+    --icecream --allocator=system --link-model=dynamic  \
     build.ninja"
 
-alias build-enterprise-ninja="python $MONGO_PATH/buildscripts/scons.py --dbg --ssl \
-    CPPPATH=/usr/local/opt/openssl/include LIBPATH=/usr/local/opt/openssl/lib \
-    CC=clang CXX=clang++ \
-    CCFLAGS='-Wa,--compress-debug-sections' \
-    MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
-    VARIANT_DIR=ent --modules=ninja \
-    build.ninja"
-
+alias mongowt='wt -C "extensions=["/home/louis/git/wiredtiger/ext/compressors/snappy/.libs/libwiredtiger_snappy.so"],log=(compressor=snappy,path=journal)"'
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
@@ -86,6 +79,7 @@ alias gs="git status"
 alias gl="git log"
 alias gc="git commit"
 alias ga="git add . -u"
+alias gg="git grep"
 
 # User configuration
 
