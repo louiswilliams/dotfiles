@@ -51,18 +51,20 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'fatih/vim-go'
-Plug 'https://github.com/oblitum/YouCompleteMe',
+Plug 'https://github.com/valloric/YouCompleteMe',
             \ {'do': 'python3 ./install.py --clang-completer'}
 Plug 'wincent/command-t', {
 \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
 \ }
 Plug 'rhysd/vim-clang-format'
 Plug 'tpope/vim-fugitive'
+Plug 'lyuts/vim-rtags'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'https://github.com/szw/vim-tags.git'
+Plug 'scrooloose/nerdcommenter'
 call plug#end()
 
-command FixIt 'YcmCompleter FixIt'
+command! FixIt 'YcmCompleter FixIt'
 set completeopt-=preview
 " set completeopt+=menuone
 " set completeopt+=noselect
@@ -92,6 +94,9 @@ function! GitRepoName()
     return system('basename -s .git `git config --get remote.origin.url`')
 endfunction
 
+" Output git grep output the quickfix window
+command! -nargs=+ Ggr execute 'silent !Ggrep '.<q-args> | cw | redraw!
+
 function! RunLint()
   if filereadable("buildscripts/lint.py")
       call setqflist([])
@@ -106,8 +111,8 @@ function! RunLint()
 endfunction
 
 autocmd BufNew,BufRead *.log match none
-autocmd BufWritePost *.cpp call RunLint()
-autocmd BufWritePost *.h call RunLint()
+"autocmd BufWritePost *.cpp call RunLint()
+"autocmd BufWritePost *.h call RunLint()
 
 set wildignore+=build
 set wildignore+=html
@@ -166,6 +171,11 @@ nmap <leader>[ <C-W>w
 " Prev window
 nmap <leader>] <C-W>p
 nmap <leader>w :bd<CR>
+" Don't close a window when closing a buffer
+" nmap <leader>d :bp\|bd #<CR>
+nmap <leader>w :bd<CR>
+
+nmap <leader>gg :Ggr <cword><CR>
 
 " Tab cycles windows
 map <Tab> <C-W>w
