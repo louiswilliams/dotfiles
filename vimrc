@@ -95,7 +95,7 @@ function! GitRepoName()
 endfunction
 
 " Output git grep output the quickfix window
-command! -nargs=+ Ggr execute 'silent !Ggrep '.<q-args> | cw | redraw!
+command! -nargs=+ Ggr execute 'silent Ggrep! ' <q-args> | cw | redraw!
 
 function! RunLint()
   if filereadable("buildscripts/lint.py")
