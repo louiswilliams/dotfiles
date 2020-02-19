@@ -50,16 +50,15 @@ set noswapfile
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
-Plug 'fatih/vim-go'
-Plug 'https://github.com/valloric/YouCompleteMe',
-            \ {'do': 'python3 ./install.py --clang-completer'}
+" Plug 'fatih/vim-go'
+Plug 'https://github.com/valloric/YouCompleteMe', {'do': 'python3 ./install.py --clang-completer'}
 Plug 'wincent/command-t', {
 \   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
 \ }
 Plug 'rhysd/vim-clang-format'
 Plug 'tpope/vim-fugitive'
 Plug 'lyuts/vim-rtags'
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'terryma/vim-multiple-cursors'
 Plug 'https://github.com/szw/vim-tags.git'
 Plug 'scrooloose/nerdcommenter'
 call plug#end()
@@ -111,6 +110,7 @@ function! RunLint()
 endfunction
 
 autocmd BufNew,BufRead *.log match none
+autocmd BufNewFile,BufRead *.j2 set ft=javascript
 "autocmd BufWritePost *.cpp call RunLint()
 "autocmd BufWritePost *.h call RunLint()
 
@@ -174,8 +174,14 @@ nmap <leader>w :bd<CR>
 " Don't close a window when closing a buffer
 " nmap <leader>d :bp\|bd #<CR>
 nmap <leader>w :bd<CR>
+" Clear highlighting
+nmap <leader><leader> :nohlsearch<CR>
 
 nmap <leader>gg :Ggr <cword><CR>
+
+" Helpers for disabling and enabling formatting
+nnoremap <leader>fd :let g:clang_format#auto_format=0 <CR> :let g:clang_format#auto_format_on_insert_leave=0<CR>
+nnoremap <leader>fe :let g:clang_format#auto_format=1 <CR> :let g:clang_format#auto_format_on_insert_leave=1<CR>
 
 " Tab cycles windows
 map <Tab> <C-W>w
