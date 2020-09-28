@@ -1,7 +1,7 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=~/.oh-my-zsh
-export PATH=~/.bin/:$PATH
+export PATH=~/.bin/:~/.cargo/bin:$PATH
 
 export NINJA_STATUS='[%f/%t (%p) %es] '
 
@@ -12,18 +12,28 @@ alias cr='python3 ~/git/kernel-tools/codereview/upload.py --no_oauth2_webbrowser
 alias merge-base="git merge-base HEAD master"
 alias git-delete-merged="git branch --merged | egrep -v \"(^\*|master)\" | xargs git branch -d"
 
-alias opt-ninja="python3 buildscripts/scons.py --opt=on --dbg=on\
+alias opt-ninja="python3 buildscripts/scons.py --opt=on --dbg=off\
     MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
-    --variables-files=etc/scons/mongodbtoolchain_stable_gcc.vars \
-    VARIANT_DIR=opt --modules= NINJA_SUFFIX=opt --ninja build.ninja"
+	CCFLAGS='-fdiagnostics-color=always' \
+	--variables-files=etc/scons/mongodbtoolchain_stable_clang.vars ICECC=icecc CCACHE=ccache \
+    VARIANT_DIR=opt --modules= NINJA_PREFIX=opt --link-model=static --ninja opt.ninja"
 
 alias build-ninja="python3 ./buildscripts/scons.py --dbg \
 	MONGO_VERSION=0.0.0 MONGO_GIT_HASH=unknown \
-	--variables-files=etc/scons/mongodbtoolchain_stable_gcc.vars ICECC=icecc CCACHE=ccache \
-	VARIANT_DIR=debug --modules= --link-model=dynamic --allocator=system --ninja build.ninja"
+	CCFLAGS='-fdiagnostics-color=always' \
+	--variables-files=etc/scons/mongodbtoolchain_stable_clang.vars ICECC=icecc CCACHE=ccache \
+	VARIANT_DIR=debug --modules= --link-model=dynamic --ninja build.ninja"
+
+alias asan-ninja=" python3 ./buildscripts/scons.py --dbg=off --opt=on \
+    MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
+    --variables-files=etc/scons/mongodbtoolchain_v3_clang.vars --allocator=system \
+    --link-model=static --sanitize=address VARIANT_DIR=asan NINJA_PREFIX=asan \
+    CCACHE=ccache ICECC=icecc --modules= --ninja asan.ninja"
 
 function buildcompiledb() {
             ./buildscripts/scons.py  \
+            --disable-warnings-as-errors \
+            --variables-files=etc/scons/mongodbtoolchain_stable_clang.vars\
             VARIANT_DIR=debug \
             --modules= \
             compile_commands.json
@@ -32,6 +42,9 @@ function buildcompiledb() {
 alias gdb-add-mongod-index="find  build/ -name '*.so' | xargs -I % -P 16 gdb-add-index % && gdb-add-index mongod"
 
 alias rdmf="journalctl --user -u rdm -f"
+
+alias changes="git diff \`merge-base\`"
+
 
 alias mongowt='wt -C "extensions=["/home/louis/git/wiredtiger/ext/compressors/snappy/.libs/libwiredtiger_snappy.so"],log=(compressor=snappy,path=journal)"'
 # Set name of the theme to load. Optionally, if you set this to "random"
