@@ -1,42 +1,53 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export ZSH=~/.oh-my-zsh
-export PATH=~/.bin/:~/.cargo/bin:$PATH
+export PATH=~/.local/bin:~/.bin/:~/.cargo/bin:$PATH
+export GOPATH=~/.go
 
 export NINJA_STATUS='[%f/%t (%p) %es] '
 
+alias activate='source python3-venv/bin/activate'
 alias resmoke='python3 buildscripts/resmoke.py'
 alias vimrc='vim ~/.vimrc'
-alias cr='python3 ~/git/kernel-tools/codereview/upload.py --no_oauth2_webbrowser -s mongodbcr.appspot.com \
-          --cc codereview-mongo@10gen.com,serverteam-storage@10gen.com --jira_user=louis.williams'
+#alias cr='python3 ~/git/kernel-tools/codereview/upload.py --no_oauth2_webbrowser -s mongodbcr.appspot.com \
+          #--cc codereview-mongo@10gen.com,serverteam-storage-execution@mongodb.com --jira_user=louis.williams'
+alias cr="dbus-run-session -- python ~/git/server-workflow-tool/jira_credentials.py create-cr \
+          -s mongodbcr.appspot.com --no_oauth2_webbrowser --jira_user=louis.williams \
+          --cc codereview-mongo@10gen.com,serverteam-storage-execution@mongodb.com"
 alias merge-base="git merge-base HEAD master"
 alias git-delete-merged="git branch --merged | egrep -v \"(^\*|master)\" | xargs git branch -d"
 
 alias opt-ninja="python3 buildscripts/scons.py --opt=on --dbg=off\
-    MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
 	CCFLAGS='-fdiagnostics-color=always' \
+	--variables-files=etc/scons/developer_versions.vars \
 	--variables-files=etc/scons/mongodbtoolchain_stable_clang.vars ICECC=icecc CCACHE=ccache \
     VARIANT_DIR=opt --modules= NINJA_PREFIX=opt --link-model=static --ninja opt.ninja"
 
 alias build-ninja="python3 ./buildscripts/scons.py --dbg \
-	MONGO_VERSION=0.0.0 MONGO_GIT_HASH=unknown \
 	CCFLAGS='-fdiagnostics-color=always' \
-	--variables-files=etc/scons/mongodbtoolchain_stable_clang.vars ICECC=icecc CCACHE=ccache \
-	VARIANT_DIR=debug --modules= --link-model=dynamic --ninja build.ninja"
+    VARIANT_DIR=debug \
+	--variables-files=etc/scons/developer_versions.vars \
+	--variables-files=etc/scons/mongodbtoolchain_v4_clang.vars ICECC=icecc CCACHE=ccache \
+	--link-model=dynamic --ninja build.ninja"
+
+alias gcc-ninja=" python3 ./buildscripts/scons.py --dbg=off --opt=on \
+	--variables-files=etc/scons/developer_versions.vars \
+    --variables-files=etc/scons/mongodbtoolchain_v3_gcc.vars --allocator=system \
+    --link-model=dynamic VARIANT_DIR=gcc NINJA_PREFIX=gcc \
+    CCACHE=ccache ICECC=icecc --modules= --ninja gcc.ninja"
 
 alias asan-ninja=" python3 ./buildscripts/scons.py --dbg=off --opt=on \
-    MONGO_VERSION='0.0.0' MONGO_GIT_HASH='unknown' \
+	--variables-files=etc/scons/developer_versions.vars \
     --variables-files=etc/scons/mongodbtoolchain_v3_clang.vars --allocator=system \
     --link-model=static --sanitize=address VARIANT_DIR=asan NINJA_PREFIX=asan \
+    CCFLAGS='-fsanitize=address -fsanitize-coverage=func'
     CCACHE=ccache ICECC=icecc --modules= --ninja asan.ninja"
 
 function buildcompiledb() {
-            ./buildscripts/scons.py  \
+            ./buildscripts/scons.py --dbg VARIANT_DIR=debug \
             --disable-warnings-as-errors \
-            --variables-files=etc/scons/mongodbtoolchain_stable_clang.vars\
-            VARIANT_DIR=debug \
-            --modules= \
-            compile_commands.json
+            --variables-files=etc/scons/mongodbtoolchain_v4_clang.vars\
+            compile_commands.json generated-sources
 }
 
 alias gdb-add-mongod-index="find  build/ -name '*.so' | xargs -I % -P 16 gdb-add-index % && gdb-add-index mongod"
