@@ -6,6 +6,9 @@ export TERM=xterm-256color
 export ZSH="$HOME/.oh-my-zsh"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
+export PATH=$PATH:/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/
+
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
@@ -79,6 +82,7 @@ source $ZSH/oh-my-zsh.sh
 
 alias merge-base="git merge-base HEAD master"
 alias activate='source python3-venv/bin/activate'
+alias dev='docker exec -it -w /home/louis/mongo charming_roentgen tmux new-session -As default'
 
 alias vi="vim"
 
@@ -121,3 +125,7 @@ zstyle ':omz:update' mode disabled
 # source /workspaces/mongo/python3-venv/bin/activate && /workspaces/mongo/buildscripts/poetry_sync.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/louis/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)

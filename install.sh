@@ -7,13 +7,18 @@ fi
 zsh --version
 if [ "$?" -eq "0" ]; then
     echo "Installing oh-my-zsh"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    if [ -d ~/.oh-my-zsh ]; then
+        echo "oh-my-zsh already installed"
+    else
+        sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    fi
+
     if [ -f ~/.zshrc ]; then
       echo .zshrc exists, moving to .zshrc.old
       mv ~/.zshrc ~/.zshrc.old 
     fi
 
-    cp zshrc ~/.zshrc
+    cp .zshrc ~/.zshrc
     cp louis.zsh-theme ~/.oh-my-zsh/themes/
 else
     echo "ZSH is not installed, skipping oh-my-zsh installation"
@@ -33,10 +38,10 @@ if [ -f ~/.vimrc ]; then
   mv ~/.vimrc ~/.vimrc.old 
 fi
 
-cp vimrc ~/.vimrc
+cp .vimrc ~/.vimrc
 
 echo Installing Plug plugins
-vim +PluginInstall +qall
+vim +PlugInstall +qall
 
 if [ -f ~/.tmux.conf ]; then
   echo .tmux.conf exists, moving to .tmux.conf.old
