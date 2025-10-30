@@ -15,6 +15,7 @@ set softtabstop=4 "treat 4 spaces like a tab
 set textwidth=100 "code should stop at 100 chars 
 match ErrorMsg '\%>100v.\+'
 set cinoptions=l1,g0,N-s,(0,u0,Ws,k2s,j1,J1,)1000,*1000 " setup cindent correctly
+set encoding=utf-8
 
 " Allow backspace
 set backspace=indent,eol,start
@@ -50,12 +51,6 @@ set noswapfile
 call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
-" Plug 'fatih/vim-go'
-Plug 'https://github.com/valloric/YouCompleteMe', {'do': 'python3 ./install.py --clang-completer'}
-Plug 'wincent/command-t', {
-\   'do': 'cd ruby/command-t/ext/command-t && ruby extconf.rb && make'
-\ }
-Plug 'rhysd/vim-clang-format'
 Plug 'tpope/vim-fugitive'
 Plug 'lyuts/vim-rtags'
 " Plug 'terryma/vim-multiple-cursors'
@@ -63,7 +58,6 @@ Plug 'https://github.com/szw/vim-tags.git'
 Plug 'scrooloose/nerdcommenter'
 call plug#end()
 
-command! FixIt 'YcmCompleter FixIt'
 set completeopt-=preview
 " set completeopt+=menuone
 " set completeopt+=noselect
