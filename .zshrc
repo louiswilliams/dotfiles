@@ -92,7 +92,7 @@ dev() {
     return 1
   fi
 
-  docker exec -e LANG=$LANG -e LC_ALL=$LC_ALL -it -w /home/louis/mongo $container tmux new-session -As default
+  docker exec -e LANG=$LANG -e LC_ALL=$LC_ALL -it -w /home/$USER/mongo $container tmux new-session -As default
 }
 
 alias vi="vim"
