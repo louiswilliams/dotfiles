@@ -7,6 +7,7 @@ export ZSH="$HOME/.oh-my-zsh"
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export PATH=$PATH:/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/
+export PATH=$PATH:~/.local/bin
 
 
 
@@ -82,7 +83,17 @@ source $ZSH/oh-my-zsh.sh
 
 alias merge-base="git merge-base HEAD master"
 alias activate='source python3-venv/bin/activate'
-alias dev='docker exec -it -w /home/louis/mongo charming_roentgen tmux new-session -As default'
+
+dev() {
+  container=$(docker ps --filter "name=^mongo-dev-mongo" --format "{{.Names}}" | head -n1)
+
+  if [[ -z "$container" ]]; then
+    echo "No running container found" >&2
+    return 1
+  fi
+
+  docker exec -e LANG=$LANG -e LC_ALL=$LC_ALL -it -w /home/louis/mongo $container tmux new-session -As default
+}
 
 alias vi="vim"
 
