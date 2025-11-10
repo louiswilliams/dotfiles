@@ -1,5 +1,10 @@
 syntax on
-colorscheme molokai
+
+if has("termguicolors")
+  set termguicolors
+else
+  colorscheme molokai
+endif
 
 " Normal escape
 imap jj <Esc>
@@ -52,9 +57,11 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
-Plug 'lyuts/vim-rtags'
+Plug 'ojroques/vim-oscyank', {'branch': 'main'}
+
+" Plug 'lyuts/vim-rtags'
 " Plug 'terryma/vim-multiple-cursors'
-Plug 'https://github.com/szw/vim-tags.git'
+" Plug 'https://github.com/szw/vim-tags.git'
 Plug 'scrooloose/nerdcommenter'
 call plug#end()
 
@@ -170,6 +177,9 @@ nmap <leader>w :bd<CR>
 nmap <leader>w :bd<CR>
 " Clear highlighting
 nmap <leader><leader> :nohlsearch<CR>
+
+nmap <leader>y <Plug>OSCYankOperator
+vmap <leader>y <Plug>OSCYankVisual
 
 nmap <leader>gg :Ggr <cword><CR>
 
